@@ -1,5 +1,6 @@
 package com.learning.springboot.technicalacademyenrollmentapp.controller;
 
+import com.learning.springboot.technicalacademyenrollmentapp.dto.course.CourseResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.enrollment.EnrollmentRequestDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.enrollment.EnrollmentResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.error.ErrorResponseDto;
@@ -7,6 +8,7 @@ import com.learning.springboot.technicalacademyenrollmentapp.dto.student.Student
 import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.success.SuccessResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.enums.EnrollmentStatus;
+import com.learning.springboot.technicalacademyenrollmentapp.service.CourseService;
 import com.learning.springboot.technicalacademyenrollmentapp.service.EnrollmentService;
 import com.learning.springboot.technicalacademyenrollmentapp.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -123,5 +125,10 @@ public class StudentController {
 
 
         return enrollmentService.addEnrollment(request);
+    }
+
+    @GetMapping("/{studentId}/courses")
+    public List<CourseResponseDto> getAllCoursesByStudentId(@PathVariable long studentId){
+        return studentService.getAllCoursesByStudentId(studentId);
     }
 }

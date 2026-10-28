@@ -1,9 +1,12 @@
 package com.learning.springboot.technicalacademyenrollmentapp.service.impl;
 
+import com.learning.springboot.technicalacademyenrollmentapp.dto.course.CourseResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentRequestDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentResponseDto;
+import com.learning.springboot.technicalacademyenrollmentapp.entity.CourseEntity;
 import com.learning.springboot.technicalacademyenrollmentapp.entity.StudentEntity;
 import com.learning.springboot.technicalacademyenrollmentapp.exception.StudentNotFoundException;
+import com.learning.springboot.technicalacademyenrollmentapp.mappers.CourseMapper;
 import com.learning.springboot.technicalacademyenrollmentapp.mappers.StudentMapper;
 import com.learning.springboot.technicalacademyenrollmentapp.repository.StudentJpaRepository;
 import com.learning.springboot.technicalacademyenrollmentapp.service.StudentService;
@@ -18,6 +21,7 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentJpaRepository repository;
     private final StudentMapper mapper;
+    private final CourseMapper courseMapper;
 
     @Override
     public List<StudentResponseDto> getAllStudents() {
@@ -68,5 +72,15 @@ public class StudentServiceImpl implements StudentService {
         repository.deleteById(studentEntity.getId());
 
         return mapper.toResponseDto(studentEntity);
+    }
+
+    @Override
+    public List<CourseResponseDto> getAllCoursesByStudentId(long studentId) {
+
+        StudentEntity studentEntity = repository.findById(studentId).orElseThrow(() -> new StudentNotFoundException("Student not found with Id : " + studentId));
+
+        List<CourseEntity> courseEntities = repository.findAllCourseByStudentId(studentId);
+
+        return courseEntities.stream().map(courseMapper::toResponseDto).toList();
     }
 }

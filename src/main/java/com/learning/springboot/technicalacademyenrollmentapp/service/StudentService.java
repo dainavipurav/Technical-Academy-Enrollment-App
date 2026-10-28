@@ -1,5 +1,6 @@
 package com.learning.springboot.technicalacademyenrollmentapp.service;
 
+import com.learning.springboot.technicalacademyenrollmentapp.dto.course.CourseResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentRequestDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentResponseDto;
 
@@ -15,4 +16,6 @@ public interface StudentService {
     StudentResponseDto updateStudent(long id, StudentRequestDto request);
 
     StudentResponseDto deleteStudent(long id);
+
+    List<CourseResponseDto> getAllCoursesByStudentId(long studentId);
 }
