@@ -16,7 +16,7 @@ public class CourseMapper {
     public CourseResponseDto toResponseDto(CourseEntity course) {
         return CourseResponseDto.builder()
                 .id(course.getId())
-                .instructorId(course.getInstructorId() == null ? null : mapper.toResponseDto(course.getInstructorId()))
+                .instructorId(course.getInstructor() == null ? null : mapper.toResponseDto(course.getInstructor()))
                 .courseName(course.getCourseName())
                 .courseCode(course.getCourseCode())
                 .description(course.getDescription())
@@ -42,7 +42,7 @@ public class CourseMapper {
             InstructorEntity instructor) {
 
         return CourseEntity.builder()
-                .instructorId(instructor)
+                .instructor(instructor)
                 .courseName(request.getCourseName())
                 .courseCode(request.getCourseCode())
                 .description(request.getDescription())

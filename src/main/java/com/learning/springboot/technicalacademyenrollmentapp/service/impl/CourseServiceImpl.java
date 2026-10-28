@@ -55,7 +55,7 @@ public class CourseServiceImpl implements CourseService {
         InstructorEntity instructorEntity = instructorJpaRepository.findById(request.getInstructorId()).orElseThrow(() -> new InstructorNotFoundException("Instructor not found with id : " + request.getInstructorId()));
 
         entity.setCourseCode(request.getCourseCode());
-        entity.setInstructorId(instructorEntity);
+        entity.setInstructor(instructorEntity);
         entity.setCourseName(request.getCourseName());
         entity.setCourseCode(request.getCourseCode());
         entity.setDescription(request.getDescription());
