@@ -47,6 +47,7 @@ public class CourseEntity {
     @Column(name = "levels")
     private CourseLevel levels;
 
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "status")
     private CourseStatus status;
 

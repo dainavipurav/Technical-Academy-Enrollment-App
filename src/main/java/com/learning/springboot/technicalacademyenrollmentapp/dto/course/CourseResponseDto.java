@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.learning.springboot.technicalacademyenrollmentapp.dto.instructor.InstructorResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class CourseResponseDto {
 
     private Long id;
-    private Long instructorId;
+    private InstructorResponseDto instructorId;
     private String courseName;
     private String courseCode;
     private String description;

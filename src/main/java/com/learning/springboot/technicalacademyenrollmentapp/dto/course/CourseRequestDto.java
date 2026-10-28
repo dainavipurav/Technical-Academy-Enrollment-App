@@ -4,6 +4,8 @@ package com.learning.springboot.technicalacademyenrollmentapp.dto.course;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.learning.springboot.technicalacademyenrollmentapp.enums.CourseLevel;
+import com.learning.springboot.technicalacademyenrollmentapp.enums.CourseStatus;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -39,10 +41,9 @@ public class CourseRequestDto {
     @DecimalMin(value = "0.0", message = "Fees cannot be negative")
     private BigDecimal fees;
 
-    private String levels;
+    private CourseLevel levels;
 
-    @Size(max = 50)
-    private String status;
+    private CourseStatus status;
 
     private LocalDate startedAt;
     private LocalDate endedAt;
