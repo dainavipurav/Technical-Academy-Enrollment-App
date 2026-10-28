@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.tags.Tag;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -35,8 +36,21 @@ public class OpenApiConfig {
                 .contact(contact)
                 .license(license);
 
+        Tag coursesTag = new Tag()
+                .name("Courses")
+                .description("APIs for managing courses in Technical Academy");
+
+        Tag instructorsTag = new Tag()
+                .name("Instructors")
+                .description("APIs for managing instructors in Technical Academy");
+
+        Tag studentsTag = new Tag()
+                .name("Students")
+                .description("APIs for managing student records and enrollments in Technical Academy");
+
         return new OpenAPI()
                 .info(info)
-                .servers(List.of(localServer));
+                .servers(List.of(localServer))
+                .tags(List.of(coursesTag, instructorsTag, studentsTag));
     }
 }

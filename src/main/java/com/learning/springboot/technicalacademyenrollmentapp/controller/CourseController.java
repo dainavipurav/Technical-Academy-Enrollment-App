@@ -72,13 +72,39 @@ public class CourseController {
         return courseService.addCourse(request);
     }
 
+    @Operation(summary = "Update course by ID", description = "Update course details for an existing course.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Course updated successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CourseResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error or invalid request payload",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Course or instructor not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
     @PutMapping("/{id}")
-    public CourseResponseDto updateCourseById(@PathVariable long id, @Valid @RequestBody CourseRequestDto request){
+    public CourseResponseDto updateCourseById(
+            @Parameter(description = "ID of the course to update", example = "1", required = true)
+            @PathVariable long id,
+            @Valid @RequestBody CourseRequestDto request){
         return courseService.updateCourseById(id, request);
     }
 
+    @Operation(summary = "Delete course by ID", description = "Remove a course record from the academy catalog.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Course deleted successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CourseResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Course not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
     @DeleteMapping("/{id}")
-    public CourseResponseDto deleteCourseById(@PathVariable long id){
+    public CourseResponseDto deleteCourseById(
+            @Parameter(description = "ID of the course to delete", example = "1", required = true)
+            @PathVariable long id){
         return courseService.deleteCourseById(id);
     }
 }
