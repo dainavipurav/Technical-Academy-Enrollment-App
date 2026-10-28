@@ -1,4 +1,5 @@
 package com.learning.springboot.technicalacademyenrollmentapp.enums;
 
-public enum CourseLeve {
+public enum CourseLevel {
+    BEGINNER, INTERMEDIATE, ADVANCED
 }

@@ -1,4 +1,7 @@
 package com.learning.springboot.technicalacademyenrollmentapp.exception;
 
-public class InstructorNotFoundException {
+public class InstructorNotFoundException extends RuntimeException{
+    public InstructorNotFoundException(String message) {
+        super(message);
+    }
 }
