@@ -68,4 +68,14 @@ public class CourseServiceImpl implements CourseService {
 
         return mapper.toResponseDto(repository.save(entity));
     }
+
+    @Override
+    public CourseResponseDto deleteCourseById(long id) {
+
+        CourseEntity courseEntity = repository.findById(id).orElseThrow(() -> new CourseNotFoundException("Course not found with id : " + id));
+
+        repository.delete(courseEntity);
+
+        return mapper.toResponseDto(courseEntity);
+    }
 }

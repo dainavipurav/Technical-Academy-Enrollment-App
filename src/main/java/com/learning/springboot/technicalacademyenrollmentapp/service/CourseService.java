@@ -14,4 +14,6 @@ public interface CourseService {
     CourseResponseDto addCourse(CourseRequestDto request);
 
     CourseResponseDto updateCourseById(long id, CourseRequestDto request);
+
+    CourseResponseDto deleteCourseById(long id);
 }

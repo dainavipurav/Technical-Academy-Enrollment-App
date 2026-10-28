@@ -48,7 +48,7 @@ public class CourseController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponseDto.class)))
     })
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public CourseResponseDto getCourseById(
             @Parameter(description = "ID of the course to retrieve", example = "1", required = true)
             @PathVariable long id){
@@ -72,9 +72,13 @@ public class CourseController {
         return courseService.addCourse(request);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public CourseResponseDto updateCourseById(@PathVariable long id, @Valid @RequestBody CourseRequestDto request){
         return courseService.updateCourseById(id, request);
     }
 
+    @DeleteMapping("/{id}")
+    public CourseResponseDto deleteCourseById(@PathVariable long id){
+        return courseService.deleteCourseById(id);
+    }
 }
