@@ -22,7 +22,7 @@ public class CourseResponseDto {
     private Long id;
 
     @Schema(description = "Assigned instructor details")
-    private InstructorResponseDto instructorId;
+    private InstructorResponseDto instructor;
 
     @Schema(description = "Name of the course", example = "Java Full Stack Development")
     private String courseName;
