@@ -1,9 +1,17 @@
 package com.learning.springboot.technicalacademyenrollmentapp.controller;
 
-
+import com.learning.springboot.technicalacademyenrollmentapp.dto.error.ErrorResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentRequestDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.service.StudentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -11,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Students", description = "APIs for managing student records and enrollments in Technical Academy")
 @RestController
 @RequiredArgsConstructor
 @Validated
@@ -19,28 +28,80 @@ public class StudentController {
 
     private final StudentService studentService;
 
+    @Operation(summary = "Get all students", description = "Fetch a list of all students registered in the academy.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved student list",
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = StudentResponseDto.class))))
+    })
     @GetMapping
     public List<StudentResponseDto> getAllStudents(){
         return studentService.getAllStudents();
     }
 
+    @Operation(summary = "Get student by ID", description = "Retrieve details of a specific student using their unique ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Student retrieved successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StudentResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Student not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
     @GetMapping("/{id}")
-    public StudentResponseDto getStudentById(@PathVariable long id){
+    public StudentResponseDto getStudentById(
+            @Parameter(description = "ID of the student to retrieve", example = "1", required = true)
+            @PathVariable long id){
         return studentService.getStudentById(id);
     }
 
+    @Operation(summary = "Register a new student", description = "Enroll and register a new student into the academy.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Student registered successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StudentResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error or invalid request payload",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
     @PostMapping
     public StudentResponseDto addStudent(@Valid @RequestBody StudentRequestDto request){
         return studentService.addStudent(request);
     }
 
+    @Operation(summary = "Update student by ID", description = "Update personal and enrollment details of an existing student.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Student updated successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StudentResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error or invalid request payload",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Student not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
     @PutMapping("/{id}")
-    public StudentResponseDto updateStudent(@PathVariable long id, @Valid @RequestBody StudentRequestDto request){
+    public StudentResponseDto updateStudent(
+            @Parameter(description = "ID of the student to update", example = "1", required = true)
+            @PathVariable long id,
+            @Valid @RequestBody StudentRequestDto request){
         return studentService.updateStudent(id, request);
     }
 
+    @Operation(summary = "Delete student by ID", description = "Remove a student record from the academy.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Student deleted successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StudentResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Student not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
     @DeleteMapping("/{id}")
-    public StudentResponseDto deleteStudent(@PathVariable long id){
+    public StudentResponseDto deleteStudent(
+            @Parameter(description = "ID of the student to delete", example = "1", required = true)
+            @PathVariable long id){
         return studentService.deleteStudent(id);
     }
 }
