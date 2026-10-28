@@ -1,10 +1,19 @@
 package com.learning.springboot.technicalacademyenrollmentapp.service.impl;
 
+import com.learning.springboot.technicalacademyenrollmentapp.dto.enrollment.EnrollmentRequestDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.enrollment.EnrollmentResponseDto;
+import com.learning.springboot.technicalacademyenrollmentapp.entity.CourseEntity;
 import com.learning.springboot.technicalacademyenrollmentapp.entity.EnrollmentEntity;
+import com.learning.springboot.technicalacademyenrollmentapp.entity.StudentEntity;
+import com.learning.springboot.technicalacademyenrollmentapp.exception.CourseNotFoundException;
 import com.learning.springboot.technicalacademyenrollmentapp.exception.EnrollmentNotFoundException;
+import com.learning.springboot.technicalacademyenrollmentapp.exception.StudentNotFoundException;
+import com.learning.springboot.technicalacademyenrollmentapp.mappers.CourseMapper;
 import com.learning.springboot.technicalacademyenrollmentapp.mappers.EnrollmentMapper;
+import com.learning.springboot.technicalacademyenrollmentapp.mappers.StudentMapper;
+import com.learning.springboot.technicalacademyenrollmentapp.repository.CourseJpaRepository;
 import com.learning.springboot.technicalacademyenrollmentapp.repository.EnrollmentJpaRepository;
+import com.learning.springboot.technicalacademyenrollmentapp.repository.StudentJpaRepository;
 import com.learning.springboot.technicalacademyenrollmentapp.service.EnrollmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +27,11 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final EnrollmentJpaRepository repository;
 
     private final EnrollmentMapper mapper;
+    private final CourseMapper courseMapper;
+    private final StudentMapper studentMapper;
+
+    private final CourseJpaRepository courseJpaRepository;
+    private final StudentJpaRepository studentJpaRepository;
 
     @Override
     public List<EnrollmentResponseDto> getAllEnrollments() {
@@ -33,5 +47,22 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         EnrollmentEntity enrollmentEntity = repository.findById(id).orElseThrow(() -> new EnrollmentNotFoundException("No Enrollment found with id : " + id));
 
         return mapper.toResponseDto(enrollmentEntity);
+    }
+
+    @Override
+    public EnrollmentResponseDto addEnrollment(EnrollmentRequestDto request) {
+
+        StudentEntity studentEntity = studentJpaRepository.findById(request.getStudent()).orElseThrow(() -> new StudentNotFoundException("No Student found with id : " + request.getStudent()));
+
+        CourseEntity courseEntity = courseJpaRepository.findById(request.getCourse()).orElseThrow(() -> new CourseNotFoundException("No Course found with id : " + request.getCourse()));
+
+        EnrollmentEntity enrollmentEntity = EnrollmentEntity.builder()
+                .course(courseEntity)
+                .student(studentEntity)
+                .enrollmentDate(request.getEnrollmentDate())
+                .status(request.getStatus())
+                .build();
+
+        return mapper.toResponseDto(repository.save(enrollmentEntity));
     }
 }
