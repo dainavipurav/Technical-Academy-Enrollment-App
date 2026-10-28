@@ -47,4 +47,25 @@ public class CourseServiceImpl implements CourseService {
 
         return mapper.toResponseDto(entity);
     }
+
+    @Override
+    public CourseResponseDto updateCourseById(long id, CourseRequestDto request) {
+
+        CourseEntity entity = repository.findById(id).orElseThrow(() -> new CourseNotFoundException("Course not found with id : " + id));
+        InstructorEntity instructorEntity = instructorJpaRepository.findById(request.getInstructorId()).orElseThrow(() -> new InstructorNotFoundException("Instructor not found with id : " + request.getInstructorId()));
+
+        entity.setCourseCode(request.getCourseCode());
+        entity.setInstructorId(instructorEntity);
+        entity.setCourseName(request.getCourseName());
+        entity.setCourseCode(request.getCourseCode());
+        entity.setDescription(request.getDescription());
+        entity.setDuration(request.getDuration());
+        entity.setFees(request.getFees());
+        entity.setLevels(request.getLevels());
+        entity.setStatus(request.getStatus());
+        entity.setStartedAt(request.getStartedAt());
+        entity.setEndedAt(request.getEndedAt());
+
+        return mapper.toResponseDto(repository.save(entity));
+    }
 }

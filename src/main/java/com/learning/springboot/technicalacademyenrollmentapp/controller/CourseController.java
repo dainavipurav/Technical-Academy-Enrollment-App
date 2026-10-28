@@ -72,4 +72,9 @@ public class CourseController {
         return courseService.addCourse(request);
     }
 
+    @PutMapping("{id}")
+    public CourseResponseDto updateCourseById(@PathVariable long id, @Valid @RequestBody CourseRequestDto request){
+        return courseService.updateCourseById(id, request);
+    }
+
 }

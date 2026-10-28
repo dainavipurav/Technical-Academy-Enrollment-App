@@ -46,7 +46,7 @@ public class CourseRequestDto {
     @NotNull(message = "Fees are required")
     @DecimalMin(value = "0.0", message = "Fees cannot be negative")
     @Schema(description = "Enrollment fee for the course", example = "499.99", minimum = "0.0", requiredMode = Schema.RequiredMode.REQUIRED)
-    private BigDecimal fees;
+    private Double fees;
 
     @Schema(description = "Target proficiency level of the course", example = "BEGINNER")
     private CourseLevel levels;
