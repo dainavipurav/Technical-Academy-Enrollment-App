@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Table(name = "students")
 @Entity
@@ -48,6 +49,15 @@ public class StudentEntity {
 
     @Column(name = "dob")
     private LocalDate dob;
+
+    /**
+     * TODO: Add this @OneToMany relationship only if you need to retrieve
+     * all enrollments associated with this course.
+     * Example: Similar to how a Cart entity maintains a list of all products
+     * associated with it.
+     */
+//    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
+//    private List<EnrollmentEntity> enrollments;
 
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     private LocalDateTime createdAt;

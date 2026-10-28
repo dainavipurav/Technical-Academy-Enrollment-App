@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,6 +22,15 @@ public class InstructorEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
+
+    /**
+     * TODO: Add this @OneToMany relationship only if you need to retrieve
+     * all enrollments associated with this course.
+     * Example: Similar to how a Cart entity maintains a list of all products
+     * associated with it.
+     */
+//    @OneToMany
+//    private List<CourseEntity> courses;
 
     @Column(name = "first_name" )
     private String firstName;

@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,7 +27,7 @@ public class CourseEntity {
             name = "instructor_id",
             foreignKey = @ForeignKey(name = "fk_course_instructor")
     )
-    private InstructorEntity instructorId;
+    private InstructorEntity instructor;
 
     @Column(name = "course_name")
     private String courseName;
@@ -56,6 +57,15 @@ public class CourseEntity {
 
     @Column(name = "ended_at")
     private LocalDate endedAt;
+
+    /**
+     * TODO: Add this @OneToMany relationship only if you need to retrieve
+     * all enrollments associated with this course.
+     * Example: Similar to how a Cart entity maintains a list of all products
+     * associated with it.
+     */
+    // @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    // private List<EnrollmentEntity> enrollments;
 
     @Column(name = "created_at", insertable = false, updatable = false, nullable = false)
     private LocalDateTime createdAt;
