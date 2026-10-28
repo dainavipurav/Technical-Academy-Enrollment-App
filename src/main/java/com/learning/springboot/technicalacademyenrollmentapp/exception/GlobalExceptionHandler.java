@@ -1,5 +1,5 @@
 package com.learning.springboot.technicalacademyenrollmentapp.exception;
-import com.learning.springboot.technicalacademyenrollmentapp.dto.ErrorResponseDto;
+import com.learning.springboot.technicalacademyenrollmentapp.dto.error.ErrorResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

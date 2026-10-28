@@ -1,7 +1,7 @@
 package com.learning.springboot.technicalacademyenrollmentapp.controller;
 
-import com.learning.springboot.technicalacademyenrollmentapp.dto.InstructorRequestDto;
-import com.learning.springboot.technicalacademyenrollmentapp.dto.InstructorResponseDto;
+import com.learning.springboot.technicalacademyenrollmentapp.dto.instructor.InstructorRequestDto;
+import com.learning.springboot.technicalacademyenrollmentapp.dto.instructor.InstructorResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.service.InstructorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

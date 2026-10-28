@@ -1,7 +1,7 @@
 package com.learning.springboot.technicalacademyenrollmentapp.service;
 
-import com.learning.springboot.technicalacademyenrollmentapp.dto.StudentRequestDto;
-import com.learning.springboot.technicalacademyenrollmentapp.dto.StudentResponseDto;
+import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentRequestDto;
+import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentResponseDto;
 
 import java.util.List;
 

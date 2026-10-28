@@ -1,5 +1,5 @@
 
-package com.learning.springboot.technicalacademyenrollmentapp.dto;
+package com.learning.springboot.technicalacademyenrollmentapp.dto.instructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

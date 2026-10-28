@@ -1,6 +1,6 @@
 package com.learning.springboot.technicalacademyenrollmentapp.mappers;
-import com.learning.springboot.technicalacademyenrollmentapp.dto.StudentRequestDto;
-import com.learning.springboot.technicalacademyenrollmentapp.dto.StudentResponseDto;
+import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentRequestDto;
+import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.entity.StudentEntity;
 import org.springframework.stereotype.Component;
 

@@ -1,8 +1,8 @@
 package com.learning.springboot.technicalacademyenrollmentapp.controller;
 
 
-import com.learning.springboot.technicalacademyenrollmentapp.dto.StudentRequestDto;
-import com.learning.springboot.technicalacademyenrollmentapp.dto.StudentResponseDto;
+import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentRequestDto;
+import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.service.StudentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

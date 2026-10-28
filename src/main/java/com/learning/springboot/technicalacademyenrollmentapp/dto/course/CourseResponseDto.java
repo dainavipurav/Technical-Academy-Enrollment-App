@@ -1,5 +1,5 @@
 
-package com.learning.springboot.technicalacademyenrollmentapp.dto;
+package com.learning.springboot.technicalacademyenrollmentapp.dto.course;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

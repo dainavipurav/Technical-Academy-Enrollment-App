@@ -1,4 +1,4 @@
-package com.learning.springboot.technicalacademyenrollmentapp.dto;
+package com.learning.springboot.technicalacademyenrollmentapp.dto.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
