@@ -57,10 +57,10 @@ public class CourseEntity {
     @Column(name = "ended_at")
     private LocalDate endedAt;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", insertable = false, updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", insertable = false, updatable = false, nullable = false)
     private LocalDateTime updatedAt;
 
 }
