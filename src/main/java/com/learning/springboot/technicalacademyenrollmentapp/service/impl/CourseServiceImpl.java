@@ -2,6 +2,7 @@ package com.learning.springboot.technicalacademyenrollmentapp.service.impl;
 
 import com.learning.springboot.technicalacademyenrollmentapp.dto.course.CourseResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.entity.CourseEntity;
+import com.learning.springboot.technicalacademyenrollmentapp.exception.CourseNotFoundException;
 import com.learning.springboot.technicalacademyenrollmentapp.mappers.CourseMapper;
 import com.learning.springboot.technicalacademyenrollmentapp.repository.CourseJpaRepository;
 import com.learning.springboot.technicalacademyenrollmentapp.service.CourseService;
@@ -23,5 +24,13 @@ public class CourseServiceImpl implements CourseService {
         List<CourseEntity> courseEntities = repository.findAll();
 
         return courseEntities.stream().map(mapper::toResponseDto).toList();
+    }
+
+    @Override
+    public CourseResponseDto getCourseById(long id) {
+
+        CourseEntity courseEntity = repository.findById(id).orElseThrow(() -> new CourseNotFoundException("Course not found with id : " + id));
+
+        return mapper.toResponseDto(courseEntity);
     }
 }

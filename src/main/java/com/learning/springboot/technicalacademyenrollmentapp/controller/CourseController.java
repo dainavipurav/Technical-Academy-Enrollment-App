@@ -4,6 +4,7 @@ import com.learning.springboot.technicalacademyenrollmentapp.dto.course.CourseRe
 import com.learning.springboot.technicalacademyenrollmentapp.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +20,11 @@ public class CourseController {
     @GetMapping
     public List<CourseResponseDto> getAllCourses(){
         return courseService.getAllCourses();
+    }
+
+    @GetMapping("{id}")
+    public CourseResponseDto getCourseById(@PathVariable long id){
+        return courseService.getCourseById(id);
     }
 
 }
