@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -74,18 +75,13 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         EnrollmentResponseDto enrollmentResponseDto = mapper.toResponseDto(repository.save(enrollmentEntity));
 
         SuccessResponseDto successResponseDto = restClient.post()
-                .uri(uriBuilder -> uriBuilder
-                .scheme("http")
-                .host("localhost")
-                .port(8081)
-                .path("/api/templateEmail")
-                .queryParam("to", "imismail885@gmail.com")
-                .queryParam("emailTemplate", EmailTemplate.STUDENT_REGISTRATION_EMAIL_TEMPLATE)
-                .build())
+                .uri(URI.create("http://localhost:8082/api/notification/email"))
                 .body(Map.of(
+                        "toEmail","imismail885@gmail.com",
+                        "emailTemplate", EmailTemplate.STUDENT_REGISTRATION_EMAIL_TEMPLATE,
                         "studentName", studentEntity.getFirstName() + " " + studentEntity.getLastName(),
                         "courseName", courseEntity.getCourseName(),
-                        "registrationDate", enrollmentEntity.getEnrollmentDate(),
+                        "enrollmentDate", enrollmentEntity.getEnrollmentDate(),
                         "studentStatus", enrollmentEntity.getStatus()
                 ))
                 .retrieve()
