@@ -6,6 +6,7 @@ import com.learning.springboot.technicalacademyenrollmentapp.dto.success.Success
 import com.learning.springboot.technicalacademyenrollmentapp.entity.CourseEntity;
 import com.learning.springboot.technicalacademyenrollmentapp.entity.EnrollmentEntity;
 import com.learning.springboot.technicalacademyenrollmentapp.entity.StudentEntity;
+import com.learning.springboot.technicalacademyenrollmentapp.enums.EmailTemplate;
 import com.learning.springboot.technicalacademyenrollmentapp.exception.CourseNotFoundException;
 import com.learning.springboot.technicalacademyenrollmentapp.exception.EnrollmentNotFoundException;
 import com.learning.springboot.technicalacademyenrollmentapp.exception.StudentNotFoundException;
@@ -19,9 +20,11 @@ import com.learning.springboot.technicalacademyenrollmentapp.service.EnrollmentS
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     private final CourseJpaRepository courseJpaRepository;
     private final StudentJpaRepository studentJpaRepository;
+
+    private final RestClient restClient;
 
     @Override
     public List<EnrollmentResponseDto> getAllEnrollments() {
@@ -66,7 +71,29 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .status(request.getStatus())
                 .build();
 
-        return mapper.toResponseDto(repository.save(enrollmentEntity));
+        EnrollmentResponseDto enrollmentResponseDto = mapper.toResponseDto(repository.save(enrollmentEntity));
+
+        SuccessResponseDto successResponseDto = restClient.post()
+                .uri(uriBuilder -> uriBuilder
+                .scheme("http")
+                .host("localhost")
+                .port(8081)
+                .path("/v1/templateEmail")
+                .queryParam("to", "imismail885@gmail.com")
+                .queryParam("emailTemplate", EmailTemplate.STUDENT_REGISTRATION_EMAIL_TEMPLATE)
+                .build())
+                .body(Map.of(
+                        "studentName", studentEntity.getFirstName() + " " + studentEntity.getLastName(),
+                        "courseName", courseEntity.getCourseName(),
+                        "registrationDate", enrollmentEntity.getEnrollmentDate(),
+                        "studentStatus", enrollmentEntity.getStatus()
+                ))
+                .retrieve()
+                .body(SuccessResponseDto.class);
+
+        System.out.println("Success : " + successResponseDto.toString());
+
+        return enrollmentResponseDto;
     }
 
     @Override
