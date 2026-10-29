@@ -73,13 +73,39 @@ public class EnrollmentController {
         return enrollmentService.addEnrollment(request);
     }
 
+    @Operation(summary = "Update enrollment by ID", description = "Update course enrollment details for an existing enrollment record.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Enrollment updated successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = EnrollmentResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error or invalid request payload",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Enrollment, student, or course not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
     @PutMapping("/{id}")
-    public EnrollmentResponseDto updateEnrollmentById(@PathVariable long id, @RequestBody EnrollmentRequestDto request){
+    public EnrollmentResponseDto updateEnrollmentById(
+            @Parameter(description = "ID of the enrollment to update", example = "1", required = true)
+            @PathVariable long id,
+            @Valid @RequestBody EnrollmentRequestDto request){
         return enrollmentService.updateEnrollmentById(id, request);
     }
 
+    @Operation(summary = "Delete enrollment by ID", description = "Remove an enrollment record from the system by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Enrollment deleted successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SuccessResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Enrollment not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
     @DeleteMapping("/{id}")
-    public SuccessResponseDto deleteEnrollmentById(@PathVariable long id){
+    public SuccessResponseDto deleteEnrollmentById(
+            @Parameter(description = "ID of the enrollment to delete", example = "1", required = true)
+            @PathVariable long id){
         return enrollmentService.deleteEnrollmentById(id);
     }
 }
