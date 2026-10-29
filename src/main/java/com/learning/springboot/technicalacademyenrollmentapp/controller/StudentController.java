@@ -114,8 +114,21 @@ public class StudentController {
         return studentService.deleteStudent(id);
     }
 
+    @Operation(summary = "Enroll student in course", description = "Enroll a student into a specific course using their respective IDs.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Student successfully enrolled in course",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = EnrollmentResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Student or course not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
     @GetMapping("/{studentId}/enroll/{courseId}")
-    public EnrollmentResponseDto enrollStudentInCourse(@PathVariable long studentId, @PathVariable long courseId){
+    public EnrollmentResponseDto enrollStudentInCourse(
+            @Parameter(description = "ID of the student", example = "1", required = true)
+            @PathVariable long studentId,
+            @Parameter(description = "ID of the course", example = "1", required = true)
+            @PathVariable long courseId){
         EnrollmentRequestDto request = EnrollmentRequestDto.builder()
                 .student(studentId)
                 .course(courseId)
@@ -127,8 +140,19 @@ public class StudentController {
         return enrollmentService.addEnrollment(request);
     }
 
+    @Operation(summary = "Get courses by student ID", description = "Retrieve a list of all courses that a specific student is enrolled in.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved courses for student",
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = CourseResponseDto.class)))),
+            @ApiResponse(responseCode = "404", description = "Student not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
     @GetMapping("/{studentId}/courses")
-    public List<CourseResponseDto> getAllCoursesByStudentId(@PathVariable long studentId){
+    public List<CourseResponseDto> getAllCoursesByStudentId(
+            @Parameter(description = "ID of the student", example = "1", required = true)
+            @PathVariable long studentId){
         return studentService.getAllCoursesByStudentId(studentId);
     }
 }

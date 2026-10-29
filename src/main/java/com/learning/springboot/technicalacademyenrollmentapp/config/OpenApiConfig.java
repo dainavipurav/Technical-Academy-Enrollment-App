@@ -48,9 +48,13 @@ public class OpenApiConfig {
                 .name("Students")
                 .description("APIs for managing student records and enrollments in Technical Academy");
 
+        Tag enrollmentsTag = new Tag()
+                .name("Enrollments")
+                .description("APIs for managing student course enrollments in Technical Academy");
+
         return new OpenAPI()
                 .info(info)
                 .servers(List.of(localServer))
-                .tags(List.of(coursesTag, instructorsTag, studentsTag));
+                .tags(List.of(coursesTag, instructorsTag, studentsTag, enrollmentsTag));
     }
 }
