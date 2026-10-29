@@ -78,7 +78,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .scheme("http")
                 .host("localhost")
                 .port(8081)
-                .path("/v1/templateEmail")
+                .path("/api/templateEmail")
                 .queryParam("to", "imismail885@gmail.com")
                 .queryParam("emailTemplate", EmailTemplate.STUDENT_REGISTRATION_EMAIL_TEMPLATE)
                 .build())
