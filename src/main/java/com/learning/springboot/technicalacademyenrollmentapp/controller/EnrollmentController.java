@@ -3,6 +3,7 @@ package com.learning.springboot.technicalacademyenrollmentapp.controller;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.enrollment.EnrollmentRequestDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.enrollment.EnrollmentResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.error.ErrorResponseDto;
+import com.learning.springboot.technicalacademyenrollmentapp.dto.success.SuccessResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.service.EnrollmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -70,5 +71,15 @@ public class EnrollmentController {
     @PostMapping
     public EnrollmentResponseDto addEnrollment(@Valid @RequestBody EnrollmentRequestDto request){
         return enrollmentService.addEnrollment(request);
+    }
+
+    @PutMapping("/{id}")
+    public EnrollmentResponseDto updateEnrollmentById(@PathVariable long id, @RequestBody EnrollmentRequestDto request){
+        return enrollmentService.updateEnrollmentById(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    public SuccessResponseDto deleteEnrollmentById(@PathVariable long id){
+        return enrollmentService.deleteEnrollmentById(id);
     }
 }
