@@ -1,7 +1,11 @@
 package com.learning.springboot.technicalacademyenrollmentapp.service.impl;
 
+import com.learning.springboot.technicalacademyenrollmentapp.clients.EmailServiceClient;
+import com.learning.springboot.technicalacademyenrollmentapp.clients.InvoiceServiceClient;
+import com.learning.springboot.technicalacademyenrollmentapp.dto.email.EmailRequestDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.enrollment.EnrollmentRequestDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.enrollment.EnrollmentResponseDto;
+import com.learning.springboot.technicalacademyenrollmentapp.dto.invoice.InvoiceRequestDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.success.SuccessResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.entity.CourseEntity;
 import com.learning.springboot.technicalacademyenrollmentapp.entity.EnrollmentEntity;
@@ -17,15 +21,14 @@ import com.learning.springboot.technicalacademyenrollmentapp.repository.CourseJp
 import com.learning.springboot.technicalacademyenrollmentapp.repository.EnrollmentJpaRepository;
 import com.learning.springboot.technicalacademyenrollmentapp.repository.StudentJpaRepository;
 import com.learning.springboot.technicalacademyenrollmentapp.service.EnrollmentService;
+import com.learning.springboot.technicalacademyenrollmentapp.tasks.GenerateInvoiceAndSendEmailTask;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +43,10 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final CourseJpaRepository courseJpaRepository;
     private final StudentJpaRepository studentJpaRepository;
 
-    private final RestClient restClient;
+    private final EmailServiceClient emailServiceClient;
+    private final InvoiceServiceClient invoiceServiceClient;
+    private final ExecutorService emailExecuterService;
+
 
     @Override
     public List<EnrollmentResponseDto> getAllEnrollments() {
@@ -74,20 +80,25 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         EnrollmentResponseDto enrollmentResponseDto = mapper.toResponseDto(repository.save(enrollmentEntity));
 
-        SuccessResponseDto successResponseDto = restClient.post()
-                .uri(URI.create("http://localhost:8082/api/notification/email"))
-                .body(Map.of(
-                        "toEmail","imismail885@gmail.com",
-                        "emailTemplate", EmailTemplate.STUDENT_REGISTRATION_EMAIL_TEMPLATE,
-                        "studentName", studentEntity.getFirstName() + " " + studentEntity.getLastName(),
-                        "courseName", courseEntity.getCourseName(),
-                        "enrollmentDate", enrollmentEntity.getEnrollmentDate(),
-                        "studentStatus", enrollmentEntity.getStatus()
-                ))
-                .retrieve()
-                .body(SuccessResponseDto.class);
+        EmailRequestDto emailRequestDto = EmailRequestDto.builder()
+                .toEmail(studentEntity.getEmail())
+                .emailTemplate(EmailTemplate.STUDENT_REGISTRATION_EMAIL_TEMPLATE)
+                .studentName(studentEntity.getFirstName() + " " + studentEntity.getLastName())
+                .courseName(courseEntity.getCourseName())
+                .enrollmentDate(enrollmentEntity.getEnrollmentDate())
+                .studentStatus(enrollmentEntity.getStatus())
+                .build();
 
-        System.out.println("Success : " + successResponseDto.toString());
+        InvoiceRequestDto invoiceRequestDto = InvoiceRequestDto.builder()
+                .enrollmentId(enrollmentResponseDto.getId())
+                .amount(courseEntity.getFees())
+                .studentName(studentEntity.getFirstName() + " " + studentEntity.getLastName())
+                .courseName(courseEntity.getCourseName())
+                .build();
+
+        Runnable emailTask = new GenerateInvoiceAndSendEmailTask(emailServiceClient, invoiceServiceClient, emailRequestDto, invoiceRequestDto);
+
+        emailExecuterService.submit(emailTask);
 
         return enrollmentResponseDto;
     }

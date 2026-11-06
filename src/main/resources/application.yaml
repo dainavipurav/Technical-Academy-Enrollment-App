@@ -1,3 +1,7 @@
+server:
+  port: 8080
+#  port: ${SERVER_PORT}
+
 spring:
   application:
     name: TechnicalAcademyEnrollmentApp
@@ -16,3 +20,9 @@ springdoc:
     tags-sorter: alpha
     display-request-duration: true
     try-it-out-enabled: true
+
+services:
+  email:
+    base-url: http://localhost:8082/api/notification/email
+  invoice:
+    base-url: http://localhost:8083/api/invoices/generate
