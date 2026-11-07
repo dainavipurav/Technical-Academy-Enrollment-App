@@ -23,7 +23,7 @@ public class GenerateInvoiceAndSendEmailTask implements Runnable{
     public void run() {
         try{
             System.out.println("Sleeping thread..." + LocalDateTime.now());
-            Thread.sleep(60000); //1 min delay
+            Thread.sleep(0); //1 min delay
 
             System.out.println("Sending email now..." + LocalDateTime.now());
             InvoiceResponseDto invoiceResponseDto = invoiceServiceClient.generateInvoice(invoiceRequestDto);
