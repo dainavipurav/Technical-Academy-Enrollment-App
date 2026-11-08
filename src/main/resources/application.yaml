@@ -22,7 +22,5 @@ springdoc:
     try-it-out-enabled: true
 
 services:
-  email:
-    base-url: http://localhost:8082/api/notification/email
   invoice:
     base-url: http://localhost:8083/api/invoices/generate

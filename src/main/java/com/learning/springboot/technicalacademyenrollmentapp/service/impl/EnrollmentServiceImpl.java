@@ -1,8 +1,6 @@
 package com.learning.springboot.technicalacademyenrollmentapp.service.impl;
 
-import com.learning.springboot.technicalacademyenrollmentapp.clients.EmailServiceClient;
 import com.learning.springboot.technicalacademyenrollmentapp.clients.InvoiceServiceClient;
-import com.learning.springboot.technicalacademyenrollmentapp.dto.email.EmailRequestDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.enrollment.EnrollmentRequestDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.enrollment.EnrollmentResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.invoice.InvoiceRequestDto;
@@ -21,7 +19,7 @@ import com.learning.springboot.technicalacademyenrollmentapp.repository.CourseJp
 import com.learning.springboot.technicalacademyenrollmentapp.repository.EnrollmentJpaRepository;
 import com.learning.springboot.technicalacademyenrollmentapp.repository.StudentJpaRepository;
 import com.learning.springboot.technicalacademyenrollmentapp.service.EnrollmentService;
-import com.learning.springboot.technicalacademyenrollmentapp.tasks.GenerateInvoiceAndSendEmailTask;
+import com.learning.springboot.technicalacademyenrollmentapp.tasks.GenerateInvoiceTask;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -43,9 +41,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final CourseJpaRepository courseJpaRepository;
     private final StudentJpaRepository studentJpaRepository;
 
-    private final EmailServiceClient emailServiceClient;
     private final InvoiceServiceClient invoiceServiceClient;
-    private final ExecutorService emailExecuterService;
+    private final ExecutorService executorService;
 
 
     @Override
@@ -80,25 +77,23 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         EnrollmentResponseDto enrollmentResponseDto = mapper.toResponseDto(repository.save(enrollmentEntity));
 
-        EmailRequestDto emailRequestDto = EmailRequestDto.builder()
-                .toEmail(studentEntity.getEmail())
-                .emailTemplate(EmailTemplate.STUDENT_REGISTRATION_EMAIL_TEMPLATE)
-                .studentName(studentEntity.getFirstName() + " " + studentEntity.getLastName())
-                .courseName(courseEntity.getCourseName())
-                .enrollmentDate(enrollmentEntity.getEnrollmentDate())
-                .studentStatus(enrollmentEntity.getStatus())
-                .build();
 
         InvoiceRequestDto invoiceRequestDto = InvoiceRequestDto.builder()
                 .enrollmentId(enrollmentResponseDto.getId())
                 .amount(courseEntity.getFees())
                 .studentName(studentEntity.getFirstName() + " " + studentEntity.getLastName())
                 .courseName(courseEntity.getCourseName())
+                .toEmail(studentEntity.getEmail())
+                .emailTemplate(EmailTemplate.STUDENT_REGISTRATION_EMAIL_TEMPLATE.name())
+                .studentName(studentEntity.getFirstName() + " " + studentEntity.getLastName())
+                .courseName(courseEntity.getCourseName())
+                .enrollmentDate(enrollmentEntity.getEnrollmentDate())
+                .enrollmentStatus(enrollmentEntity.getStatus().name())
                 .build();
 
-        Runnable emailTask = new GenerateInvoiceAndSendEmailTask(emailServiceClient, invoiceServiceClient, emailRequestDto, invoiceRequestDto);
+        Runnable generateInvoice = new GenerateInvoiceTask(invoiceServiceClient, invoiceRequestDto);
 
-        emailExecuterService.submit(emailTask);
+        executorService.submit(generateInvoice);
 
         return enrollmentResponseDto;
     }

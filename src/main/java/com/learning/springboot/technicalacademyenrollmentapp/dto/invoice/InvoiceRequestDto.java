@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,5 +27,11 @@ public class InvoiceRequestDto {
 
     @NotNull(message = "Course name is required")
     private String courseName;
+
+    private String toEmail;
+    private String emailTemplate;
+    private LocalDate enrollmentDate;
+    private String enrollmentStatus;
+    private String invoiceDownloadPath;
 }
 
