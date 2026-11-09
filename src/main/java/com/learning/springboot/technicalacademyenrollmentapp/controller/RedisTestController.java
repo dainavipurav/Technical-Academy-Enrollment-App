@@ -15,17 +15,17 @@ public class RedisTestController {
     @GetMapping("/save")
     public void saveDataToRedis(@RequestParam String key, @RequestParam String value){
         System.out.println("Key : " + key + " Value : " + value);
-        redisTemplate.opsForValue().set("dainavi:" + key, value);
+        redisTemplate.opsForValue().set(key, value);
     }
 
     @GetMapping("/get")
     public String getDataFromRedis(@RequestParam String key){
-        return redisTemplate.opsForValue().get("dainavi:" + key);
+        return redisTemplate.opsForValue().get(key);
     }
 
     @DeleteMapping("/delete")
     public String deleteByKeyFromRedis(@RequestParam String key){
-        return redisTemplate.opsForValue().getAndDelete("dainavi:" + key);
+        return redisTemplate.opsForValue().getAndDelete(key);
     }
 
 //    @DeleteMapping("/delete")

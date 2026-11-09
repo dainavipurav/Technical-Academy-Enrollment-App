@@ -23,7 +23,7 @@ public class InstructorServiceImpl implements InstructorService {
     private final InstructorMapper mapper;
 
     @Override
-    @Cacheable(value = "dainavi:instructors", key = "'all'")
+    @Cacheable(value = "instructors", key = "'all'")
     public List<InstructorResponseDto> getAllInstructors() {
 
         log.info("Inside getAllInstructors");
@@ -34,7 +34,7 @@ public class InstructorServiceImpl implements InstructorService {
     }
 
     @Override
-    @Cacheable(value = "dainavi:instructors", key = "#id")
+    @Cacheable(value = "instructors", key = "#id")
     public InstructorResponseDto getInstructorById(long id) {
 
         InstructorEntity instructor = repository.findById(id).orElseThrow(() -> new InstructorNotFoundException("Instructor not found with id : " + id));

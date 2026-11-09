@@ -34,7 +34,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseResponseDto> getAllCourses() {
 
-        String redisCourseListKey = "dainavi:courses";
+        String redisCourseListKey = "courses";
 
         String cachedCourses = redisTemplate.opsForValue().get(redisCourseListKey);
 
