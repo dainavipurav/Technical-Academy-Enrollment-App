@@ -1,26 +1,8 @@
-server:
-  port: 8084
-#  port: ${SERVER_PORT}
-
 spring:
   application:
     name: TechnicalAcademyEnrollmentApp
+  profiles:
+    active: dev
 
-  datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-
-springdoc:
-  api-docs:
-    path: /v3/api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-    operations-sorter: method
-    tags-sorter: alpha
-    display-request-duration: true
-    try-it-out-enabled: true
-
-services:
-  invoice:
-    base-url: http://localhost:8083/api/invoices/generate
+server:
+  port: ${SERVER_PORT:8084}
