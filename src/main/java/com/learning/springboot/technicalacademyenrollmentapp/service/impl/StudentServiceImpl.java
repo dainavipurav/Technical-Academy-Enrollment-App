@@ -5,12 +5,15 @@ import com.learning.springboot.technicalacademyenrollmentapp.dto.student.Student
 import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.entity.CourseEntity;
 import com.learning.springboot.technicalacademyenrollmentapp.entity.StudentEntity;
+import com.learning.springboot.technicalacademyenrollmentapp.enums.StudentStatus;
 import com.learning.springboot.technicalacademyenrollmentapp.exception.StudentNotFoundException;
 import com.learning.springboot.technicalacademyenrollmentapp.mappers.CourseMapper;
 import com.learning.springboot.technicalacademyenrollmentapp.mappers.StudentMapper;
 import com.learning.springboot.technicalacademyenrollmentapp.repository.StudentJpaRepository;
 import com.learning.springboot.technicalacademyenrollmentapp.service.StudentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -82,5 +85,22 @@ public class StudentServiceImpl implements StudentService {
         List<CourseEntity> courseEntities = repository.findAllCourseByStudentId(studentId);
 
         return courseEntities.stream().map(courseMapper::toResponseDto).toList();
+    }
+
+    @Override
+    public Page<StudentResponseDto> getAllStudents(Pageable pageable, String gender, StudentStatus status) {
+        Page<StudentEntity> studentEntities;
+
+        if(gender == null && status == null) {
+            studentEntities = repository.findAll(pageable);
+        } else if(gender != null && status != null) {
+            studentEntities = repository.findAllByGenderAndStatus(pageable,gender,status);
+        } else if (gender != null) {
+            studentEntities = repository.findAllByGender(gender, pageable);
+        } else {
+            studentEntities = repository.findAllByStatus(status, pageable);
+        }
+
+        return studentEntities.map(mapper::toResponseDto);
     }
 }

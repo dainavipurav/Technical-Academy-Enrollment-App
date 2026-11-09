@@ -8,6 +8,7 @@ import com.learning.springboot.technicalacademyenrollmentapp.dto.student.Student
 import com.learning.springboot.technicalacademyenrollmentapp.dto.student.StudentResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.dto.success.SuccessResponseDto;
 import com.learning.springboot.technicalacademyenrollmentapp.enums.EnrollmentStatus;
+import com.learning.springboot.technicalacademyenrollmentapp.enums.StudentStatus;
 import com.learning.springboot.technicalacademyenrollmentapp.service.CourseService;
 import com.learning.springboot.technicalacademyenrollmentapp.service.EnrollmentService;
 import com.learning.springboot.technicalacademyenrollmentapp.service.StudentService;
@@ -21,6 +22,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,16 +42,16 @@ public class StudentController {
     private final StudentService studentService;
     private final EnrollmentService enrollmentService;
 
-    @Operation(summary = "Get all students", description = "Fetch a list of all students registered in the academy.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved student list",
-                    content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = StudentResponseDto.class))))
-    })
-    @GetMapping
-    public List<StudentResponseDto> getAllStudents(){
-        return studentService.getAllStudents();
-    }
+//    @Operation(summary = "Get all students", description = "Fetch a list of all students registered in the academy.")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Successfully retrieved student list",
+//                    content = @Content(mediaType = "application/json",
+//                            array = @ArraySchema(schema = @Schema(implementation = StudentResponseDto.class))))
+//    })
+//    @GetMapping
+//    public List<StudentResponseDto> getAllStudents(){
+//        return studentService.getAllStudents();
+//    }
 
     @Operation(summary = "Get student by ID", description = "Retrieve details of a specific student using their unique ID.")
     @ApiResponses(value = {
@@ -154,5 +159,14 @@ public class StudentController {
             @Parameter(description = "ID of the student", example = "1", required = true)
             @PathVariable long studentId){
         return studentService.getAllCoursesByStudentId(studentId);
+    }
+
+
+    @GetMapping
+    public Page<StudentResponseDto> getAllStudentsWithPagination(
+            @PageableDefault(size = 10, page = 0, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam(required = false) String gender,
+            @RequestParam(required = false) StudentStatus status){
+        return studentService.getAllStudents(pageable, gender, status);
     }
 }
