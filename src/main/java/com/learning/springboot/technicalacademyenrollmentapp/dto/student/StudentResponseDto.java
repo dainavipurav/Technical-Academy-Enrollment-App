@@ -1,5 +1,6 @@
 package com.learning.springboot.technicalacademyenrollmentapp.dto.student;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.learning.springboot.technicalacademyenrollmentapp.enums.StudentStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -47,9 +48,11 @@ public class StudentResponseDto {
     @Schema(description = "Date of birth", example = "2001-04-12")
     private LocalDate dob;
 
+    @JsonIgnore
     @Schema(description = "Record creation timestamp", example = "2026-01-10T08:30:00")
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @Schema(description = "Record last update timestamp", example = "2026-01-10T08:30:00")
     private LocalDateTime updatedAt;
 }
