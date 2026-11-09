@@ -1,5 +1,6 @@
 package com.learning.springboot.technicalacademyenrollmentapp.dto.instructor;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -15,7 +16,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Schema(description = "Response representation containing instructor details")
-public class InstructorResponseDto {
+public class InstructorResponseDto implements Serializable {
+
+//    private static final long serialVersionUID = 1L;
 
     @Schema(description = "Unique identifier of the instructor", example = "1")
     private Long id;

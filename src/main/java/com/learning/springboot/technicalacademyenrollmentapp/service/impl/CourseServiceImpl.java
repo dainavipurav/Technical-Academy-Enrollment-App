@@ -11,26 +11,52 @@ import com.learning.springboot.technicalacademyenrollmentapp.repository.CourseJp
 import com.learning.springboot.technicalacademyenrollmentapp.repository.InstructorJpaRepository;
 import com.learning.springboot.technicalacademyenrollmentapp.service.CourseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CourseServiceImpl implements CourseService {
 
     private final CourseJpaRepository repository;
     private final InstructorJpaRepository instructorJpaRepository;
     private final CourseMapper mapper;
+    private final RedisTemplate<String,String> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     @Override
     public List<CourseResponseDto> getAllCourses() {
 
-        List<CourseEntity> courseEntities = repository.findAll();
+        String redisCourseListKey = "dainavi:courses";
 
-        return courseEntities.stream().map(mapper::toResponseDto).toList();
+        String cachedCourses = redisTemplate.opsForValue().get(redisCourseListKey);
+
+        if(cachedCourses != null){
+            log.info("Cache Hit : Course data found success");
+            return objectMapper.readValue(
+                    cachedCourses,
+                    new TypeReference<List<CourseResponseDto>>() {}
+            );
+        }
+
+        log.info("Cache Miss : Course data not found");
+        List<CourseEntity> courseEntities = repository.findAll();
+        List<CourseResponseDto> courses = courseEntities.stream().map(mapper::toResponseDto).toList();
+        String json = objectMapper.writeValueAsString(courses);
+        redisTemplate.opsForValue().set(redisCourseListKey, json, Duration.ofMinutes(1));
+
+        return courses;
     }
 
+
+//    @Cacheable(value = "courses", key = "#id")
     @Override
     public CourseResponseDto getCourseById(long id) {
 

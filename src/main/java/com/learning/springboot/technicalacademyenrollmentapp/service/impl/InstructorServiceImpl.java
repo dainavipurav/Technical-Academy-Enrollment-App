@@ -8,25 +8,33 @@ import com.learning.springboot.technicalacademyenrollmentapp.mappers.InstructorM
 import com.learning.springboot.technicalacademyenrollmentapp.repository.InstructorJpaRepository;
 import com.learning.springboot.technicalacademyenrollmentapp.service.InstructorService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class InstructorServiceImpl implements InstructorService {
 
     private final InstructorJpaRepository repository;
     private final InstructorMapper mapper;
 
     @Override
+    @Cacheable(value = "dainavi:instructors", key = "'all'")
     public List<InstructorResponseDto> getAllInstructors() {
+
+        log.info("Inside getAllInstructors");
+        log.info("Cache MISS: Fetching instructors from database");
         List<InstructorEntity> instructorEntities = repository.findAll();
 
         return instructorEntities.stream().map(mapper::toResponseDto).toList();
     }
 
     @Override
+    @Cacheable(value = "dainavi:instructors", key = "#id")
     public InstructorResponseDto getInstructorById(long id) {
 
         InstructorEntity instructor = repository.findById(id).orElseThrow(() -> new InstructorNotFoundException("Instructor not found with id : " + id));

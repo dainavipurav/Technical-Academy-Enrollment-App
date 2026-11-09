@@ -9,6 +9,21 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      timeout: 2000ms
+      username: ${REDIS_USERNAME}
+      password: ${REDIS_PASSWORD}
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 1m
+      cache-null-values: false
+#      key-prefix: "technical-academy:"
+
 springdoc:
   api-docs:
     path: /v3/api-docs
@@ -21,7 +36,7 @@ springdoc:
 
 services:
   invoice:
-    base-url: ${INVOICE_SERVICE_URL:http://localhost:8083/api/invoices/generate}
+    base-url: http://localhost:8083/api/invoices/generate
 
 logging:
   level:
